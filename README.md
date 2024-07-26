@@ -7,7 +7,16 @@ Simple package to store data in native side for temporary. So it will be availab
 ```sh
 npm install react-native-temp-storage
 ```
+or
+```sh
+yarn add react-native-temp-storage
+```
 
+#### iOS
+
+```sh
+npx pod-install
+```
 ## Usage
 
 
