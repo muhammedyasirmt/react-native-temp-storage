@@ -3,16 +3,42 @@
 @implementation TempStorage
 RCT_EXPORT_MODULE()
 
-// Example method
-// See // https://reactnative.dev/docs/native-modules-ios
-RCT_EXPORT_METHOD(multiply:(double)a
-                  b:(double)b
-                  resolve:(RCTPromiseResolveBlock)resolve
-                  reject:(RCTPromiseRejectBlock)reject)
-{
-    NSNumber *result = @(a * b);
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    _tempStorage = [NSMutableDictionary new];
+  }
+  return self;
+}
 
-    resolve(result);
+RCT_EXPORT_METHOD(setItem:(NSString *)key value:(NSString *)value resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  @try {
+    self.tempStorage[key] = value;
+    resolve(nil);
+  }
+  @catch (NSException *exception) {
+    reject(@"set_item_error", @"Failed to set item", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(getItem:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  @try {
+    NSString *value = self.tempStorage[key];
+    resolve(value);
+  }
+  @catch (NSException *exception) {
+    reject(@"get_item_error", @"Failed to get item", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(deleteItem:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+  @try {
+    [self.tempStorage removeObjectForKey:key];
+    resolve(nil);
+  }
+  @catch (NSException *exception) {
+    reject(@"delete_item_error", @"Failed to delete item", nil);
+  }
 }
 
 // Don't compile this code when we build for the old architecture.

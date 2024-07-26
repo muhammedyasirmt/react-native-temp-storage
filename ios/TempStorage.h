@@ -7,6 +7,7 @@
 #import <React/RCTBridgeModule.h>
 
 @interface TempStorage : NSObject <RCTBridgeModule>
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *tempStorage;
 #endif
 
 @end

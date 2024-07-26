@@ -24,6 +24,14 @@ const TempStorage = TempStorageModule
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return TempStorage.multiply(a, b);
+export function setItem(key: string, value: string): Promise<string> {
+  return TempStorage.setItem(key, value);
+}
+
+export function getItem(key: string): Promise<string> {
+  return TempStorage.getItem(key);
+}
+
+export function deleteItem(key: string): Promise<string> {
+  return TempStorage.deleteItem(key);
 }

@@ -1,6 +1,6 @@
 # react-native-temp-storage
 
-simple package to store string value in native side for temporary, to be used after bundle reload.
+Simple package to store data in native side for temporary. So it will be available after hot-reload, bundle restart, but not app restart
 
 ## Installation
 
@@ -12,11 +12,61 @@ npm install react-native-temp-storage
 
 
 ```js
-import { multiply } from 'react-native-temp-storage';
+import { useState } from 'react';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import * as TempStorage from 'react-native-temp-storage';
 
-// ...
+export default function App() {
+  const [result, setResult] = useState<string | undefined>();
 
-const result = await multiply(3, 7);
+  return (
+    <View style={styles.container}>
+      <Text>Result: {result}</Text>
+      <Button
+        title="set Color Red"
+        onPress={() => TempStorage.setItem('color', 'Red')}
+      />
+      <Button
+        title="set Taste sweet"
+        onPress={() => TempStorage.setItem('taste', 'Sweet')}
+      />
+      <Button
+        title="set Color Blue"
+        onPress={() => TempStorage.setItem('color', 'Blue')}
+      />
+      <Button
+        title="delete Color"
+        onPress={() => TempStorage.deleteItem('color')}
+      />
+      <Button
+        title="delete Taste"
+        onPress={() => TempStorage.deleteItem('taste')}
+      />
+      <Button
+        title="get Color"
+        onPress={() => TempStorage.getItem('color').then(setResult)}
+      />
+      <Button
+        title="get Taste"
+        onPress={() => TempStorage.getItem('taste').then(setResult)}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  box: {
+    width: 60,
+    height: 60,
+    marginVertical: 20,
+  },
+});
+
 ```
 
 
