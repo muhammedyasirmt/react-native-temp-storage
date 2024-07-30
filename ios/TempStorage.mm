@@ -1,44 +1,47 @@
 #import "TempStorage.h"
 
 @implementation TempStorage
-RCT_EXPORT_MODULE()
 
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    _tempStorage = [NSMutableDictionary new];
-  }
-  return self;
+// Declare _tempStorage as a class property
++ (NSMutableDictionary *)tempStorage {
+    static NSMutableDictionary *storage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        storage = [NSMutableDictionary new];
+    });
+    return storage;
 }
 
+RCT_EXPORT_MODULE()
+
 RCT_EXPORT_METHOD(setItem:(NSString *)key value:(NSString *)value resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  @try {
-    self.tempStorage[key] = value;
-    resolve(nil);
-  }
-  @catch (NSException *exception) {
-    reject(@"set_item_error", @"Failed to set item", nil);
-  }
+    @try {
+        [TempStorage.tempStorage setObject:value forKey:key];
+        resolve(nil);
+    }
+    @catch (NSException *exception) {
+        reject(@"set_item_error", @"Failed to set item", nil);
+    }
 }
 
 RCT_EXPORT_METHOD(getItem:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  @try {
-    NSString *value = self.tempStorage[key];
-    resolve(value);
-  }
-  @catch (NSException *exception) {
-    reject(@"get_item_error", @"Failed to get item", nil);
-  }
+    @try {
+        NSString *value = [TempStorage.tempStorage objectForKey:key];
+        resolve(value);
+    }
+    @catch (NSException *exception) {
+        reject(@"get_item_error", @"Failed to get item", nil);
+    }
 }
 
 RCT_EXPORT_METHOD(deleteItem:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-  @try {
-    [self.tempStorage removeObjectForKey:key];
-    resolve(nil);
-  }
-  @catch (NSException *exception) {
-    reject(@"delete_item_error", @"Failed to delete item", nil);
-  }
+    @try {
+        [TempStorage.tempStorage removeObjectForKey:key];
+        resolve(nil);
+    }
+    @catch (NSException *exception) {
+        reject(@"delete_item_error", @"Failed to delete item", nil);
+    }
 }
 
 // Don't compile this code when we build for the old architecture.
