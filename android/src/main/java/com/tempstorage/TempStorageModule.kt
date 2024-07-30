@@ -6,32 +6,36 @@ import com.facebook.react.bridge.Promise
 
 class TempStorageModule internal constructor(context: ReactApplicationContext) :
   TempStorageSpec(context) {
+
+  // Declare tempStorage as a static property in the companion object
+  companion object {
     private val tempStorage = mutableMapOf<String, String>()
+
+    const val NAME = "TempStorage"
+    
+    fun getTempStorage(): MutableMap<String, String> {
+      return tempStorage
+    }
+  }
 
   override fun getName(): String {
     return NAME
   }
 
-  // Example method
-  // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
   override fun setItem(key: String, value: String, promise: Promise) {
-    tempStorage[key] = value
+    getTempStorage()[key] = value
     promise.resolve(null)
   }
 
   @ReactMethod
   override fun getItem(key: String, promise: Promise) {
-    promise.resolve(tempStorage[key])
+    promise.resolve(getTempStorage()[key])
   }
 
   @ReactMethod
   override fun deleteItem(key: String, promise: Promise) {
-    tempStorage.remove(key) != null
+    getTempStorage().remove(key)
     promise.resolve(null)
-  }
-
-  companion object {
-    const val NAME = "TempStorage"
   }
 }
